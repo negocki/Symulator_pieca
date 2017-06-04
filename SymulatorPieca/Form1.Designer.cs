@@ -73,8 +73,8 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.label_czuwak = new System.Windows.Forms.Label();
+            this.listBox_awarie = new System.Windows.Forms.ListBox();
             this.label11 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -487,10 +487,10 @@
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.label5);
+            this.groupBox5.Controls.Add(this.label_czuwak);
             this.groupBox5.Controls.Add(this.button2);
             this.groupBox5.Controls.Add(this.button1);
-            this.groupBox5.Location = new System.Drawing.Point(651, 332);
+            this.groupBox5.Location = new System.Drawing.Point(722, 336);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(183, 118);
             this.groupBox5.TabIndex = 16;
@@ -505,6 +505,7 @@
             this.button1.TabIndex = 0;
             this.button1.Text = "Zaloguj";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
@@ -515,23 +516,24 @@
             this.button2.TabIndex = 1;
             this.button2.Text = "Wyloguj";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // label5
+            // label_czuwak
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(17, 89);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(101, 13);
-            this.label5.TabIndex = 2;
-            this.label5.Text = "Czuwak: 30 sekund";
+            this.label_czuwak.AutoSize = true;
+            this.label_czuwak.Location = new System.Drawing.Point(17, 89);
+            this.label_czuwak.Name = "label_czuwak";
+            this.label_czuwak.Size = new System.Drawing.Size(101, 13);
+            this.label_czuwak.TabIndex = 2;
+            this.label_czuwak.Text = "Czuwak: 30 sekund";
             // 
-            // listBox1
+            // listBox_awarie
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(651, 119);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(188, 186);
-            this.listBox1.TabIndex = 17;
+            this.listBox_awarie.FormattingEnabled = true;
+            this.listBox_awarie.Location = new System.Drawing.Point(651, 119);
+            this.listBox_awarie.Name = "listBox_awarie";
+            this.listBox_awarie.Size = new System.Drawing.Size(254, 186);
+            this.listBox_awarie.TabIndex = 17;
             // 
             // label11
             // 
@@ -546,9 +548,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(846, 468);
+            this.ClientSize = new System.Drawing.Size(917, 468);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.listBox_awarie);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.button_rozpal);
             this.Controls.Add(this.groupBox4);
@@ -629,10 +631,10 @@
         private System.Windows.Forms.Label label_went_awaria;
         private System.Windows.Forms.Timer timer_czuwak;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label_czuwak;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox listBox_awarie;
         private System.Windows.Forms.Label label11;
     }
 }

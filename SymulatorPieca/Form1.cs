@@ -30,10 +30,12 @@ namespace SymulatorPieca
         public bool awaria_pomp = false;
         public bool awaria_went = false;
 
+        public Logowanie dialog_logowanie = new Logowanie();
         public Random randomizer = new Random();
         public Form1()
         {
             InitializeComponent();
+
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e) //szybki ruszt
@@ -160,10 +162,20 @@ namespace SymulatorPieca
             int awaria = randomizer.Next(0,2); //czy nastapila awaria?
             if(awaria == 1)
             {
+                //informacja o awarii
+
+                MessageBox.Show("Nastapila awaria!",
+                 "Awaria",
+                 MessageBoxButtons.OK,
+                MessageBoxIcon.Exclamation,
+                MessageBoxDefaultButton.Button1);
+
                 int co_zepsute = randomizer.Next(0, 3); //wybieramy co sie zepsuło
 
                 if(co_zepsute == 0) //awaria rusztu
                 {
+                    listBox_awarie.Items.Add("<" + DateTime.Now + "> " + "Awaria rusztu");
+                    listBox_awarie.TopIndex = listBox_awarie.Items.Count - 1;
                     label_ruszt_awaria.Visible = true;
                     ruszt_speed = 0;
                     button_ruszt_start.Enabled = false;
@@ -172,6 +184,8 @@ namespace SymulatorPieca
                 }
                 else if(co_zepsute == 1) //awaria wentylatorów
                 {
+                    listBox_awarie.Items.Add("<" + DateTime.Now + "> " + "Awaria wentylatorów");
+                    listBox_awarie.TopIndex = listBox_awarie.Items.Count - 1;
                     label_went_awaria.Visible = true;
                     trackBar3.Enabled = false;
                     fan1_speed = 0;
@@ -180,6 +194,8 @@ namespace SymulatorPieca
                 }
                 else if(co_zepsute == 2) //awaria pomp
                 {
+                    listBox_awarie.Items.Add("<" + DateTime.Now + "> " + "Awaria pomp");
+                    listBox_awarie.TopIndex = listBox_awarie.Items.Count - 1;
                     label_pompy_awaria.Visible = true;
                     button_awariapomp.Enabled = true;
                     pompa_zimna = 0;
@@ -194,6 +210,8 @@ namespace SymulatorPieca
 
         private void button_awariaruszt_Click(object sender, EventArgs e) //naprawa rusztu
         {
+            listBox_awarie.Items.Add("<" + DateTime.Now + "> " + "Naprawiono");
+            listBox_awarie.TopIndex = listBox_awarie.Items.Count - 1;
             label_ruszt_awaria.Visible = false;
             button_ruszt_start.Enabled = true;
             button_ruszt_stop.Enabled = true;
@@ -202,6 +220,8 @@ namespace SymulatorPieca
 
         private void button_awaria_went_Click(object sender, EventArgs e) //naprawiamy wentylatory
         {
+            listBox_awarie.Items.Add("<" + DateTime.Now + "> " + "Naprawiono");
+            listBox_awarie.TopIndex = listBox_awarie.Items.Count - 1;
             label_went_awaria.Visible = false;
             trackBar3.Enabled = true;
             button_awaria_went.Enabled = false;
@@ -209,6 +229,8 @@ namespace SymulatorPieca
 
         private void button_awariapomp_Click(object sender, EventArgs e)
         {
+            listBox_awarie.Items.Add("<" + DateTime.Now + "> " + "Naprawiono");
+            listBox_awarie.TopIndex = listBox_awarie.Items.Count - 1;
             label_pompy_awaria.Visible = false;
             button_awariapomp.Enabled = false;
             pompa_zimna = 0;
@@ -224,11 +246,55 @@ namespace SymulatorPieca
             if(czuwak > 0)
             {
                 czuwak--;
+                label_czuwak.Text = "Czuwak: " + czuwak.ToString() + " s";
             }
             else
             {
-                czuwak++;
+                czuwak = 30;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            dialog_logowanie.ShowDialog();
+            if(Zalogowany.zalogowany)
+            {
+                //obsluga zalogowania
+                button_ruszt_start.Enabled = true;
+                button_ruszt_stop.Enabled = true;
+                trackBar3.Enabled = true;
+                trackBar_pompazim.Enabled = true;
+                trackBar1.Enabled = true;
+                button_rozpal.Enabled = true;
+                button1.Enabled = false;
+                button2.Enabled = true;
+                timer_awaria.Enabled = true;
+                timer_czuwak.Enabled = true;
+
+
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Operator wylogowany!",
+                 "Wylogowano",
+                 MessageBoxButtons.OK,
+                MessageBoxIcon.Exclamation,
+                MessageBoxDefaultButton.Button1);
+
+            button_ruszt_start.Enabled = false;
+            button_ruszt_stop.Enabled = false;
+            trackBar3.Enabled = false;
+            trackBar_pompazim.Enabled = false;
+            trackBar1.Enabled = false;
+            button_rozpal.Enabled = false;
+            button1.Enabled = false;
+            button2.Enabled = false;
+            timer_awaria.Enabled = false;
+            timer_czuwak.Enabled = false;
+            czuwak = 30;
+            label_czuwak.Text = "Czuwak: 30 s";
         }
     }
 }
