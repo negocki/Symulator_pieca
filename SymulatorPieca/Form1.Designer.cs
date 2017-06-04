@@ -385,18 +385,18 @@
             this.label_wodaciep.AutoSize = true;
             this.label_wodaciep.Location = new System.Drawing.Point(94, 37);
             this.label_wodaciep.Name = "label_wodaciep";
-            this.label_wodaciep.Size = new System.Drawing.Size(23, 13);
+            this.label_wodaciep.Size = new System.Drawing.Size(29, 13);
             this.label_wodaciep.TabIndex = 6;
-            this.label_wodaciep.Text = "0 C";
+            this.label_wodaciep.Text = "30 C";
             // 
             // label_wodazim
             // 
             this.label_wodazim.AutoSize = true;
             this.label_wodazim.Location = new System.Drawing.Point(94, 24);
             this.label_wodazim.Name = "label_wodazim";
-            this.label_wodazim.Size = new System.Drawing.Size(23, 13);
+            this.label_wodazim.Size = new System.Drawing.Size(29, 13);
             this.label_wodazim.TabIndex = 5;
-            this.label_wodazim.Text = "0 C";
+            this.label_wodazim.Text = "30 C";
             // 
             // label10
             // 
@@ -433,7 +433,7 @@
             // 
             // timer_awaria
             // 
-            this.timer_awaria.Interval = 10000;
+            this.timer_awaria.Interval = 15000;
             this.timer_awaria.Tick += new System.EventHandler(this.timer_awaria_Tick);
             // 
             // button_rozpal
@@ -525,7 +525,7 @@
             this.label_czuwak.Name = "label_czuwak";
             this.label_czuwak.Size = new System.Drawing.Size(101, 13);
             this.label_czuwak.TabIndex = 2;
-            this.label_czuwak.Text = "Czuwak: 30 sekund";
+            this.label_czuwak.Text = "Czuwak: 60 sekund";
             // 
             // listBox_awarie
             // 

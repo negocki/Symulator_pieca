@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Media;
 
 namespace SymulatorPieca
 {
@@ -21,7 +21,7 @@ namespace SymulatorPieca
         public int woda_ciepla = 30;
         public int temp_palenisko = 0;
         public int ruszt_speed = 0;
-        public int czuwak = 30;
+        public int czuwak = 60;
 
         public bool rozpalony = false;
         public bool zalogowany = false;
@@ -53,7 +53,7 @@ namespace SymulatorPieca
                 if (ruszt < 100)
                 {
                     ruszt += 10;
-                    progressBar1.Value = ruszt;
+                    progressBar1.Value = ruszt; //zmieniamy progress bar rusztu od 0 do 100 i tak w koło
                 }
                 else
                 {
@@ -121,6 +121,8 @@ namespace SymulatorPieca
                         double ruszt = ruszt_speed * 0.1;
                         double fans = fan1_speed * 0.1;
                         temp_palenisko = temp_palenisko + Convert.ToInt32(ruszt) + Convert.ToInt32(fans);
+                        woda_ciepla = woda_ciepla + Convert.ToInt32(pompa_ciepla * 0.01 * temp_palenisko * 0.001) + Convert.ToInt32(pompa_zimna * 0.001);
+                        woda_zimna = Convert.ToInt32(0.4 * woda_ciepla);
                     }
                     else
                     {
@@ -128,24 +130,39 @@ namespace SymulatorPieca
                         int znak = randomizer.Next(0, 1);
                         if (znak == 0) znak = -1;
                         temp_palenisko += znak * randomizer.Next(0, 100);
+                        woda_ciepla += znak * randomizer.Next(0, 10);
                     }
                 }
                 else
                 {
                     if (temp_palenisko > 0) 
-                        temp_palenisko = temp_palenisko - (200 - ruszt_speed) - Convert.ToInt32(fan1_speed*0.01) - 100; //wygaszanie paleniska, do poprawki
+                        temp_palenisko = temp_palenisko - Convert.ToInt32((200 - ruszt_speed)*0.2) - Convert.ToInt32(fan1_speed*0.01) - 50; //wygaszanie paleniska, do poprawki
                     else
                     {
                         temp_palenisko = 0;
                         rozpalony = false; //palenisko wygasło
                     }
+
+                    if(woda_ciepla > 30)
+                    {
+                        woda_ciepla = woda_ciepla - Convert.ToInt32(0.1 * pompa_zimna * 0.01) - Convert.ToInt32(0.01 * pompa_ciepla * 0.01); //woda robi sie zimniejsza
+                    }
                 }
                 label_palenisko.Text = temp_palenisko.ToString()+" C";
+                label_wodaciep.Text = woda_ciepla.ToString() + " C";
+                label_wodazim.Text = woda_zimna.ToString() + " C";
             }
             else
             {
+                if (woda_ciepla > 30)
+                {
+                    woda_ciepla = woda_ciepla - Convert.ToInt32(0.1 * pompa_zimna * 0.1) - Convert.ToInt32(0.01 * pompa_ciepla * 0.01); //woda robi sie zimniejsza
+                    woda_zimna = Convert.ToInt32(0.4 * woda_ciepla);
+                }
                 temp_palenisko = 0;
                 label_palenisko.Text = temp_palenisko.ToString() + " C";
+                label_wodaciep.Text = woda_ciepla.ToString() + " C";
+                label_wodazim.Text = woda_zimna.ToString() + " C";
             }
 
 
@@ -159,7 +176,7 @@ namespace SymulatorPieca
 
         private void timer_awaria_Tick(object sender, EventArgs e)
         {
-            int awaria = randomizer.Next(0,2); //czy nastapila awaria?
+            int awaria = randomizer.Next(0,3); //czy nastapila awaria?
             if(awaria == 1)
             {
                 //informacja o awarii
@@ -250,7 +267,37 @@ namespace SymulatorPieca
             }
             else
             {
-                czuwak = 30;
+                SystemSounds.Beep.Play();
+                Czuwak czuw = new Czuwak();
+                czuw.Show();
+                czuwak = 60;
+            }
+
+            if(!Zalogowany.zalogowany) //jezeli dialog ustawil zalogowany na false to wylogowujemy
+            {
+               
+                    MessageBox.Show("Operator wylogowany z powodu nieobecności!",
+                    "Wylogowano",
+                    MessageBoxButtons.OK,
+                   MessageBoxIcon.Exclamation,
+                   MessageBoxDefaultButton.Button1);
+
+                    button_ruszt_start.Enabled = false;
+                    button_ruszt_stop.Enabled = false;
+                    trackBar3.Enabled = false;
+                    trackBar_pompazim.Enabled = false;
+                    trackBar1.Enabled = false;
+                    button_rozpal.Enabled = false;
+                    button1.Enabled = true;
+                    button2.Enabled = false;
+                    timer_awaria.Enabled = false;
+                    timer_czuwak.Enabled = false;
+                    ruszt_start = false;
+                    czuwak = 60;
+                    label_czuwak.Text = "Czuwak: 60 s";
+                    Zalogowany.zalogowany = false;
+
+                
             }
         }
 
@@ -275,7 +322,7 @@ namespace SymulatorPieca
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e) //wylogowanie
         {
             MessageBox.Show("Operator wylogowany!",
                  "Wylogowano",
@@ -289,12 +336,14 @@ namespace SymulatorPieca
             trackBar_pompazim.Enabled = false;
             trackBar1.Enabled = false;
             button_rozpal.Enabled = false;
-            button1.Enabled = false;
+            button1.Enabled = true;
             button2.Enabled = false;
             timer_awaria.Enabled = false;
             timer_czuwak.Enabled = false;
-            czuwak = 30;
-            label_czuwak.Text = "Czuwak: 30 s";
+            ruszt_start = false;
+            czuwak = 60;
+            label_czuwak.Text = "Czuwak: 60 s";
+            Zalogowany.zalogowany = false;
         }
     }
 }
