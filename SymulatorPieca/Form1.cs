@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace SymulatorPieca
 {
     public partial class Form1 : Form
@@ -17,12 +18,13 @@ namespace SymulatorPieca
         public int pompa_zimna = 0;
         public int pompa_ciepla = 0;
         public int woda_zimna = 30;
-        public int woda_ciepla = 80;
+        public int woda_ciepla = 30;
         public int temp_palenisko = 0;
         public int ruszt_speed = 0;
+        public int czuwak = 30;
 
         public bool rozpalony = false;
-        public bool zalogowany = true;
+        public bool zalogowany = false;
         public bool ruszt_start = false;
         public bool awaria_ruszt = false;
         public bool awaria_pomp = false;
@@ -34,7 +36,7 @@ namespace SymulatorPieca
             InitializeComponent();
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        private void radioButton1_CheckedChanged(object sender, EventArgs e) //szybki ruszt
         {
             timer_ruszt.Stop();
             timer_ruszt.Interval = 1000;
@@ -59,7 +61,7 @@ namespace SymulatorPieca
             }
         }
 
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        private void radioButton2_CheckedChanged(object sender, EventArgs e) //wolny ruszt
         {
             timer_ruszt.Stop();
             timer_ruszt.Interval = 2000;
@@ -67,7 +69,7 @@ namespace SymulatorPieca
             timer_ruszt.Start();
         }
 
-        private void button_ruszt_start_Click(object sender, EventArgs e)
+        private void button_ruszt_start_Click(object sender, EventArgs e) //start rusztu
         {
             ruszt_start = true;
             ruszt = 0;
@@ -76,7 +78,7 @@ namespace SymulatorPieca
             timer_ruszt.Start();
         }
 
-        private void button_ruszt_stop_Click(object sender, EventArgs e)
+        private void button_ruszt_stop_Click(object sender, EventArgs e) //stop ruszt
         {
             ruszt_start = false;
             ruszt_speed = 0;
@@ -97,6 +99,7 @@ namespace SymulatorPieca
         private void trackBar3_Scroll(object sender, EventArgs e)
         {
             label_fan1.Text = "Fan 1: " + (trackBar3.Value * 100).ToString() + " RPM";
+            label_fan2.Text = "Fan 2: " + (trackBar3.Value * 100).ToString() + " RPM";
             fan1_speed = trackBar3.Value * 100;
         }
 
@@ -150,6 +153,82 @@ namespace SymulatorPieca
         {
             temp_palenisko = 400;
             rozpalony = true; //rozpalamy
+        }
+
+        private void timer_awaria_Tick(object sender, EventArgs e)
+        {
+            int awaria = randomizer.Next(0,2); //czy nastapila awaria?
+            if(awaria == 1)
+            {
+                int co_zepsute = randomizer.Next(0, 3); //wybieramy co sie zepsuło
+
+                if(co_zepsute == 0) //awaria rusztu
+                {
+                    label_ruszt_awaria.Visible = true;
+                    ruszt_speed = 0;
+                    button_ruszt_start.Enabled = false;
+                    button_ruszt_stop.Enabled = false;
+                    button_awariaruszt.Enabled = true;
+                }
+                else if(co_zepsute == 1) //awaria wentylatorów
+                {
+                    label_went_awaria.Visible = true;
+                    trackBar3.Enabled = false;
+                    fan1_speed = 0;
+                    trackBar3.Value = 0;
+                    button_awaria_went.Enabled = true;
+                }
+                else if(co_zepsute == 2) //awaria pomp
+                {
+                    label_pompy_awaria.Visible = true;
+                    button_awariapomp.Enabled = true;
+                    pompa_zimna = 0;
+                    pompa_ciepla = 0;
+                    trackBar_pompazim.Enabled = false;
+                    trackBar_pompazim.Value = 0;
+                    trackBar1.Enabled = false;
+                    trackBar1.Value = 0;
+                }
+            }
+        }
+
+        private void button_awariaruszt_Click(object sender, EventArgs e) //naprawa rusztu
+        {
+            label_ruszt_awaria.Visible = false;
+            button_ruszt_start.Enabled = true;
+            button_ruszt_stop.Enabled = true;
+            button_awariaruszt.Enabled = false;
+        }
+
+        private void button_awaria_went_Click(object sender, EventArgs e) //naprawiamy wentylatory
+        {
+            label_went_awaria.Visible = false;
+            trackBar3.Enabled = true;
+            button_awaria_went.Enabled = false;
+        }
+
+        private void button_awariapomp_Click(object sender, EventArgs e)
+        {
+            label_pompy_awaria.Visible = false;
+            button_awariapomp.Enabled = false;
+            pompa_zimna = 0;
+            pompa_ciepla = 0;
+            trackBar_pompazim.Enabled = true;
+            trackBar_pompazim.Value = 0;
+            trackBar1.Enabled = true;
+            trackBar1.Value = 0;
+        }
+
+        private void timer_czuwak_Tick(object sender, EventArgs e)
+        {
+            if(czuwak > 0)
+            {
+                czuwak--;
+            }
+            else
+            {
+                czuwak++;
+            }
         }
     }
 }
